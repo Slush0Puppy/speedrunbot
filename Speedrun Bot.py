@@ -2,59 +2,8 @@ import discord
 import urllib.request, json 
 from discord.ext import commands
 
-from utility import *       #utility functions used by commands
+from utility import pformat       #pformat used to format user inputs
 import srbot      #imports command functions
-
-
-#   All command aliases
-alias = {
-    "+leaderboard": "leaderboard",
-    "+lb": "leaderboard",
-    "+worldrecord": "worldrecord",
-    "+wr": "worldrecord",
-    "+wrcount": "wrcount",
-    "+wrs": "wrcount",
-    "+modcount": "modcount",
-    "+mods": "modcount",
-    "+runcount":"runcount",
-    "+runs":"runcount",
-    "+categories":"cats",
-    "+cats":"cats",
-    "+help": "help",
-    "+commands": "commands",
-    "+coms": "commands",
-    "+?": "help"
-    }
-
-
-#   List of outputs from the +help command
-helpguide = {
-    "commands": "Commands:\n"+"+leaderboard, +worldrecord, +wrcount, +modcount, +runcount, +categories, +help\n"+
-        "Do +help [command] for more info.",
-    "leaderboard": "+lb <game>, [category] [subcategory]\n"+"Displays the top 10 speedruns.",
-    "worldrecord": "+wr <game>, [category] [subcategory]\n"+
-        "Gives detailed information about the world record.",
-    "wrcount": "+wrcount <user>, [platform]\n"+"Counts the number of world records a user has.",
-    "modcount": "+mods <user>\n"+"Counts the number of games a user moderates.",
-    "runcount": "+runs <user>, [platform], [obsolete]\n"+"Counts the number of runs by a user. "+
-        "by default, obsoleted runs are also counted.",
-    "cats": "+cats <game>\n"+"Shows all categories of a game.",
-    "help": "+help [command]\n"+"Describes what a command does.",
-    "default": "This is SpeedrunBot, made by conor and SlushPuppy.\n\n"+
-        "To see all of the commands, do +commands, then do +help <command> for more information.\n<> means a "+
-    "required parameter, and [] means an optional parameter. Parameters are always separated by commas (,).\n"+
-    "If a command has parameter <user>, it can be replaced by a list of usernames by putting an asterisk (*) in"+
-    "place of the name, then ending the command with a list of names prefixed with slashes like so:\n"+
-    "```+runs *, Web /SlushPuppy/conormcmahon/SaturnRunsGames```\n"+
-    "To ask for help or report an issue, message Slush Puppy#4986 on Discord."
-    }
-
-
-def pformat(s):
-    s=s.replace(' ','_')
-    for eachchar in "%()":
-            s = s.replace(eachchar,'')
-    return s
 
 
 ##  Bot Setup
@@ -126,9 +75,21 @@ async def srbot_commands(ctx):
 
 @client.command(name="help", aliases=["?"])
 async def help(ctx, command=""):
-    await ctx.send(srbot.srbot_help[command])
+    if command:
+        await ctx.send(bot_prefix + srbot.srbot_help[client.get_command(command).name])
+    else:
+        await ctx.send(srbot.srbot_help[""])
 
+@client.event
+async def on_command_error(ctx,error):
+    if not isinstance(error, commands.CommandNotFound):
+        await ctx.send("Something went wrong! Make sure everything is formatted and spelled correctly.")
 
  
 print("Starting up...")
-client.run("")#insert token here
+
+tokenfile = open('token.txt')   #Make a text file called token.txt containing token
+token = tokenfile.read()
+tokenfile.close()
+
+client.run(token)

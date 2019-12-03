@@ -4,52 +4,60 @@ srbot_help = {
     "":
         "This is SpeedrunBot, made by Slush0Puppy.\n"+
         "To see all commands, do +commands, then +help [command] for more information.\n"+
-        "Optional parameters are surrounded by square brackets. Multi-word phrases can be entered by putting "+
-        "quotation marks around it.\n"+
+        "To enter a parameter with spaces, place quotation marks around it.\n"+
         "For help or feedback, contact Slush Puppy#4986 on discord, or email slushpuppycontact@gmail.com",
     "leaderboard":
-        "+leaderboard game [category] [subcategory]\n"+
-        "Displays the top 10 runs of a category.",
-    "leaderboard":
-        "+lb game [category] [subcategory]\n"+
+        "leaderboard game [category] [subcategory]\n"+
         "Displays the top 10 runs of a category.",
     "worldrecord":
-        "+worldrecord game [category] [subcategory]\n"+
-        "Gives detailed information about the world record for a category.",
-    "wr":
-        "+wr game [category] [subcategory]\n"+
+        "worldrecord game [category] [subcategory]\n"+
         "Gives detailed information about the world record for a category.",
     "wrcount":
-        "+wrcount user [platform]\n"+
-        "Counts the number of world records a user has.",
-    "wrs":
-        "+wrs user [platform]\n"+
+        "wrcount user [platform]\n"+
         "Counts the number of world records a user has.",
     "modcount":
-        "+modcount user\n"+
-        "Counts the number of games a user moderates.",
-    "mods":
-        "+mods user\n"+
+        "modcount user\n"+
         "Counts the number of games a user moderates.",
     "runcount":
-        "+runcount user [platform = all] [obsolete = true]\n"+
-        "Counts the number of runs by a user. By default, obsoleted runs are also counted.",
-    "runcount":
-        "+runs user [platform = all] [obsolete = true]\n"+
+        "runcount user [platform = all] [obsolete = true]\n"+
         "Counts the number of runs by a user. By default, obsoleted runs are also counted.",
     "categories":
-        "+categories game\n"+
-        "Shows all categories of a game.",
-    "cats":
-        "+cats game\n"+
+        "categories game\n"+
         "Shows all categories of a game.",
     "help":
-        "+help [command]\n"+
-        "Describes what a command does.",
-    "?":
-        "+? [command]\n"+
+        "help [command]\n"+
         "Describes what a command does."
     }
+#   +cats
+#   Creates a dictionary with information about a game's categories. key: id, value: name
+def cats(game):
+    categories={}
+    with urllib.request.urlopen("https://www.speedrun.com/api/v1/games/" + game +
+                                "/categories") as url:
+        catdata = json.loads(url.read().decode())
+        for each in catdata['data']:
+            if each['type'] == "per-game":
+                categories[each['id']] = each['name']
+    return categories
+
+
+#   (Not actually a command but used often by other commands)
+#   Creates a dictionary with information about a category's subcategories. key: name, value: id
+def subcats(game,category):
+    catsdict=cats(game)
+    for each in catsdict:
+        if pformat(catsdict[each].lower())==category.lower():###################################
+            category = each
+    variables={}
+    with urllib.request.urlopen("https://www.speedrun.com/api/v1/games/" + game + "/variables") as url:
+        vardata = json.loads(url.read().decode())
+        for each in vardata['data']:
+            if (each['scope']['type']=="full-game" and each['is-subcategory'] and each['category'] and
+                each['category'].lower()==category.lower()):   #finds full-game subcategories
+                for each2 in each['values']['values']:
+                    variables[each['values']['values'][each2]['label']] = [each['id'],each2]
+    return variables
+
 
 #   +leaderboard
 #   Displays the top 10 runs of a category
@@ -66,7 +74,7 @@ def leaderboard(game, category="", subcategory=""):
     if subcategory in subcategories:
         subcatid = subcategories[subcategory]
         varUrl = "&var-"+subcatid[0]+"="+subcatid[1]
-        
+
     with urllib.request.urlopen("https://www.speedrun.com/api/v1/leaderboards/"+game+"/category/"+category+
                                 "?top=10"+varUrl) as url:
         leaderboarddata = json.loads(url.read().decode())   #gets information from speedrun.com api

@@ -64,29 +64,4 @@ def userid(username):
         return userdata['data']['id']
 
 
-#   Creates a dictionary with information about a game's categories. key: id, value: name
-def cats(game):
-    categories={}
-    with urllib.request.urlopen("https://www.speedrun.com/api/v1/games/" + game +
-                                "/categories?type=\"per-game\"") as url:
-        catdata = json.loads(url.read().decode())
-        for each in catdata['data']:
-            categories[each['id']] = each['name']
-    return categories
 
-
-#   Creates a dictionary with information about a category's subcategories. key: name, value: id
-def subcats(game,category):
-    catsdict=cats(game)
-    for each in catsdict:
-        if pformat(catsdict[each].lower())==category.lower():###################################
-            category = each
-    variables={}
-    with urllib.request.urlopen("https://www.speedrun.com/api/v1/games/" + game + "/variables") as url:
-        vardata = json.loads(url.read().decode())
-        for each in vardata['data']:
-            if (each['scope']['type']=="full-game" and each['is-subcategory'] and each['category'] and
-                each['category'].lower()==category.lower()):   #finds full-game subcategories
-                for each2 in each['values']['values']:
-                    variables[each['values']['values'][each2]['label']] = [each['id'],each2]
-    return variables
