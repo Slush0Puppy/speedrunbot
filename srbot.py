@@ -1,5 +1,55 @@
 from utility import *
 
+srbot_help = {
+    "":
+        "This is SpeedrunBot, made by Slush0Puppy.\n"+
+        "To see all commands, do +commands, then +help [command] for more information.\n"+
+        "Optional parameters are surrounded by square brackets. Multi-word phrases can be entered by putting "+
+        "quotation marks around it.\n"+
+        "For help or feedback, contact Slush Puppy#4986 on discord, or email slushpuppycontact@gmail.com",
+    "leaderboard":
+        "+leaderboard game [category] [subcategory]\n"+
+        "Displays the top 10 runs of a category.",
+    "leaderboard":
+        "+lb game [category] [subcategory]\n"+
+        "Displays the top 10 runs of a category.",
+    "worldrecord":
+        "+worldrecord game [category] [subcategory]\n"+
+        "Gives detailed information about the world record for a category.",
+    "wr":
+        "+wr game [category] [subcategory]\n"+
+        "Gives detailed information about the world record for a category.",
+    "wrcount":
+        "+wrcount user [platform]\n"+
+        "Counts the number of world records a user has.",
+    "wrs":
+        "+wrs user [platform]\n"+
+        "Counts the number of world records a user has.",
+    "modcount":
+        "+modcount user\n"+
+        "Counts the number of games a user moderates.",
+    "mods":
+        "+mods user\n"+
+        "Counts the number of games a user moderates.",
+    "runcount":
+        "+runcount user [platform = all] [obsolete = true]\n"+
+        "Counts the number of runs by a user. By default, obsoleted runs are also counted.",
+    "runcount":
+        "+runs user [platform = all] [obsolete = true]\n"+
+        "Counts the number of runs by a user. By default, obsoleted runs are also counted.",
+    "categories":
+        "+categories game\n"+
+        "Shows all categories of a game.",
+    "cats":
+        "+cats game\n"+
+        "Shows all categories of a game.",
+    "help":
+        "+help [command]\n"+
+        "Describes what a command does.",
+    "?":
+        "+? [command]\n"+
+        "Describes what a command does."
+    }
 
 #   +leaderboard
 #   Displays the top 10 runs of a category
