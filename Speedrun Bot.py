@@ -2,7 +2,7 @@ import discord
 import urllib.request, json 
 from discord.ext import commands
 
-from utility import pformat       #pformat used to format user inputs
+from utility import pformat, makelist       #pformat used to format user inputs
 import srbot      #imports command functions
 
 
@@ -66,7 +66,7 @@ async def runcount(ctx, user, platform=""):
 
 @client.command(name="categories", aliases=["cats"])
 async def categories(ctx, game):
-    await ctx.send(srbot.cats(pformat(game)))
+    await ctx.send(makelist(list(srbot.cats(pformat(game)).values())))
 
 @client.command(name="commands", aliases=["coms"])
 async def srbot_commands(ctx):
