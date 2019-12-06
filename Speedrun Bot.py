@@ -16,7 +16,7 @@ client.remove_command("help")
 
 @client.event
 async def on_ready():
-    await client.change_presence(activity=discord.Game(name='Speedrunning'))
+    await client.change_presence(activity=discord.Game(name='Speedruns | +help'))
     print("Ready\n" + "\nName:\t\t " + client.user.name + "\nID:\t\t " + str(client.user.id) +
           "\nDiscord Version: " + discord.__version__ + "\n")
 ##  Bot Setup
