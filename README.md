@@ -1,6 +1,7 @@
 # SpeedrunBot
 SpeedrunBot is a discord.py bot which accesses run information from the speedrun.com REST API. Its purpose is to provide a fast way to look up speedrun information.
-The official hosted version is https://discordapp.com/oauth2/authorize?client_id=644879546650198016&scope=bot.
+The official hosted version is
+https://discordapp.com/oauth2/authorize?client_id=644879546650198016&scope=bot.
 
 ## Usage (users)
 By default, the bot's prefix is +. To get a list of commands, type **+commands**. To see what a command does, type **+help [command]**.
