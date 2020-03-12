@@ -24,6 +24,9 @@ srbot_help = {
     "categories":
         "categories game\n"+
         "Shows all categories of a game.",
+    "source":
+        "source\n"+
+        "Provides a link to the bot's source code and homepage.",
     "invite":
         "invite\n"+
         "Shows the bot's invite link.",

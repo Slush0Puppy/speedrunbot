@@ -70,13 +70,18 @@ async def categories(ctx, game):
 
 @client.command(name="commands", aliases=["coms"])
 async def srbot_commands(ctx):
-    await ctx.send("Commands:\n"+"+leaderboard, +worldrecord, +wrcount, +modcount, +runcount, +categories, +invite, +help\n"+
+    await ctx.send("Commands:\n"+"+leaderboard, +worldrecord, +wrcount, +modcount, +runcount, +categories, "+
+                   "+source, +invite, +help\n"+
         "Do +help [command] for more info.")
 
 @client.command(name="invite", aliases=["add"]) # !!! Change this if you are hosting the bot yourself.
 async def invite(ctx):
     await ctx.send("To add speedrun.bot to your server, click here:\n"+
                    "https://discordapp.com/oauth2/authorize?client_id=644879546650198016&scope=bot")
+
+@client.command(name="source", aliases=["credit","credits","code","sourcecode"])
+async def source(ctx):
+    await ctx.send("The source code is available at https://github.com/Slush0Puppy/speedrunbot")
 
 @client.command(name="help", aliases=["?"])
 async def help(ctx, command=""):
