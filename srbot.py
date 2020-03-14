@@ -3,35 +3,36 @@ from utility import *
 srbot_help = {
     "":
         "This is SpeedrunBot, made by Slush0Puppy.\n"+
-        "To see all commands, do +commands, then +help [command] for more information.\n"+
+        "To see all commands, do **+commands**, then **+help [command]** for more information.\n"+
         "To enter a parameter with spaces, place quotation marks around it.\n"+
-        "For help or feedback, contact Slush Puppy#4986 on discord, or email slushpuppycontact@gmail.com",
+        "For help or feedback, contact Slush Puppy#4986 on discord, or email slushpuppycontact@gmail.com\n"+
+        "To add this bot to your server, type **+invite**",
     "leaderboard":
-        "leaderboard game [category] [subcategory]\n"+
+        "**leaderboard game [category] [subcategory]**\n"+
         "Displays the top 10 runs of a category.",
     "worldrecord":
-        "worldrecord game [category] [subcategory]\n"+
+        "**worldrecord game [category] [subcategory]**\n"+
         "Gives detailed information about the world record for a category.",
     "wrcount":
-        "wrcount user [platform]\n"+
+        "**wrcount user [platform]**\n"+
         "Counts the number of world records a user has.",
     "modcount":
-        "modcount user\n"+
+        "**modcount user**\n"+
         "Counts the number of games a user moderates.",
     "runcount":
-        "runcount user [platform = all] [obsolete = true]\n"+
+        "**runcount user [platform = all] [obsolete = true]**\n"+
         "Counts the number of runs by a user. By default, obsoleted runs are also counted.",
     "categories":
-        "categories game\n"+
+        "**categories game**\n"+
         "Shows all categories of a game.",
     "source":
-        "source\n"+
+        "**source**\n"+
         "Provides a link to the bot's source code and homepage.",
     "invite":
-        "invite\n"+
+        "**invite**\n"+
         "Shows the bot's invite link.",
     "help":
-        "help [command]\n"+
+        "**help [command]**\n"+
         "Describes what a command does."
     }
 #   +cats

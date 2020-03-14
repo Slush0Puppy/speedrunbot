@@ -30,43 +30,61 @@ async def on_message(message):
     await client.process_commands(message)
 
 @client.command(name="leaderboard", aliases=["lb"], description="test")
-async def leaderboard(ctx, game, cat="", subcat=""):
-    await ctx.send(srbot.leaderboard(pformat(game), pformat(cat), subcat))
+async def leaderboard(ctx, game=None, cat="", subcat=""):
+    if game: #checks if a game has been entered
+        await ctx.send(srbot.leaderboard(pformat(game), pformat(cat), subcat))
+    else:    #if not, send the result of the +help command
+        await ctx.send(bot_prefix + srbot.srbot_help["leaderboard"])
 
 @client.command(name="worldrecord", aliases=["wr"])
-async def worldrecord(ctx, game, cat="", subcat=""):
-    await ctx.send(srbot.worldrecord(pformat(game), pformat(cat), subcat))
+async def worldrecord(ctx, game=None, cat="", subcat=""):
+    if game:
+        await ctx.send(srbot.worldrecord(pformat(game), pformat(cat), subcat))
+    else:
+        await ctx.send(bot_prefix + srbot.srbot_help["worldrecord"])
 
 @client.command(name="wrcount", aliases=["wrs"])
-async def wrcount(ctx, user, platform=""):
-    if (user[0]+user[-1]) == "[]":
-        for each in user[1:-1].split(','):
-            print(each)
-            await ctx.author.send(srbot.wrcount, platform)()
+async def wrcount(ctx, user=None, platform=""):
+    if user:
+        if (user[0]+user[-1]) == "[]":
+            for each in user[1:-1].split(','):
+                print(each)
+                await ctx.author.send(srbot.wrcount(pformat(each), platform))
+        else:
+            await ctx.send(srbot.wrcount(user, platform))
     else:
-        await ctx.send(srbot.wrcount(user, platform))
+        await ctx.send(bot_prefix + srbot.srbot_help["wrcount"])
 
 @client.command(name="modcount", aliases=["mods"])
-async def modcount(ctx, user):
-    if (user[0]+user[-1]) == "[]":
-        for each in user[1:-1].split(','):
-            print(each)
-            await ctx.author.send(srbot.modcount(pformat(each)))
+async def modcount(ctx, user=None):
+    if user:
+        if (user[0]+user[-1]) == "[]":
+            for each in user[1:-1].split(','):
+                print(each)
+                await ctx.author.send(srbot.modcount(pformat(each)))
+        else:
+            await ctx.send(srbot.modcount(user))
     else:
-        await ctx.send(srbot.modcount(user))
+        await ctx.send(bot_prefix + srbot.srbot_help["modcount"])
 
 @client.command(name="runcount", aliases=["runs"])
-async def runcount(ctx, user, platform=""):
-    if (user[0]+user[-1]) == "[]":
-        for each in user[1:-1].split(','):
-            print(each)
-            await ctx.author.send(srbot.runcount(pformat(each), platform))
+async def runcount(ctx, user=None, platform=""):
+    if user:
+        if (user[0]+user[-1]) == "[]":
+            for each in user[1:-1].split(','):
+                print(each)
+                await ctx.author.send(srbot.runcount(pformat(each), platform))
+        else:
+            await ctx.send(srbot.runcount(user, platform))
     else:
-        await ctx.send(srbot.runcount(user, platform))
+        await ctx.send(bot_prefix + srbot.srbot_help["runcount"])
 
 @client.command(name="categories", aliases=["cats"])
-async def categories(ctx, game):
-    await ctx.send(makelist(list(srbot.cats(pformat(game)).values())))
+async def categories(ctx, game=None):
+    if game:
+        await ctx.send(makelist(list(srbot.cats(pformat(game)).values())))
+    else:
+        await ctx.send(bot_prefix + srbot.srbot_help["categories"])
 
 @client.command(name="commands", aliases=["coms"])
 async def srbot_commands(ctx):
@@ -84,7 +102,7 @@ async def source(ctx):
     await ctx.send("The source code is available at https://github.com/Slush0Puppy/speedrunbot")
 
 @client.command(name="help", aliases=["?"])
-async def help(ctx, command=""):
+async def command_help(ctx, command=""):
     if command:
         await ctx.send(bot_prefix + srbot.srbot_help[client.get_command(command).name])
     else:
