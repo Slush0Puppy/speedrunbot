@@ -33,7 +33,10 @@ srbot_help = {
         "Shows the bot's invite link.",
     "help":
         "**help [command]**\n"+
-        "Describes what a command does."
+        "Describes what a command does.",
+    "ping":
+        "**ping** \n"+
+        "Shows the ping to discord."
     }
 #   +cats
 #   Creates a dictionary with information about a game's categories. key: id, value: name
