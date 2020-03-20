@@ -96,7 +96,7 @@ async def categories(ctx, game=None):
 @client.command(name="commands", aliases=["coms"])
 async def srbot_commands(ctx):
     await ctx.send("Commands:\n"+"+leaderboard, +worldrecord, +wrcount, +modcount, +runcount, +categories, "+
-                   "+source, +invite, +help\n"+
+                   "+source, +invite, +ping, +help\n"+
         "Do +help [command] for more info.")
 
 @client.command(name="invite", aliases=["add"]) # !!! Change this if you are hosting the bot yourself.
