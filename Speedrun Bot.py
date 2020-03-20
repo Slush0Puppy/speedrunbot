@@ -36,6 +36,13 @@ async def leaderboard(ctx, game=None, cat="", subcat=""):
     else:    #if not, send the result of the +help command
         await ctx.send(bot_prefix + srbot.srbot_help["leaderboard"])
 
+@client.command(name="ping")
+async def ping(ctx):
+    #"""Shows the Client Latency."""
+    t = await ctx.send('Pong!')
+    ms = (t.created_at-ctx.message.created_at).total_seconds() * 1000
+    await t.edit(content='Pong! \n{}ms'.format(int(ms)))
+
 @client.command(name="worldrecord", aliases=["wr"])
 async def worldrecord(ctx, game=None, cat="", subcat=""):
     if game:
