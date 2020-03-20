@@ -204,7 +204,7 @@ def wrcount(user,platform=""):
 #   +modcount
 #   Counts the number of games and series a user moderates. 
 def modcount(user):
-    with urllib.request.urlopen("https://www.speedrun.com/api/v1/games?moderator=" + userid(user)) as url:
+    with urllib.request.urlopen("https://www.speedrun.com/api/v1/games?max=200&moderator=" + userid(user)) as url:
         moddata = json.loads(url.read().decode())
         games = len(moddata['data'])
         if games == 0:
