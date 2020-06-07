@@ -33,7 +33,10 @@ srbot_help = {
         "Shows the bot's invite link.",
     "help":
         "**help [command]**\n"+
-        "Describes what a command does."
+        "Describes what a command does.",
+    "ping":
+        "**ping** \n"+
+        "Shows the ping to discord."
     }
 #   +cats
 #   Creates a dictionary with information about a game's categories. key: id, value: name
@@ -204,7 +207,7 @@ def wrcount(user,platform=""):
 #   +modcount
 #   Counts the number of games and series a user moderates. 
 def modcount(user):
-    with urllib.request.urlopen("https://www.speedrun.com/api/v1/games?moderator=" + userid(user)) as url:
+    with urllib.request.urlopen("https://www.speedrun.com/api/v1/games?max=200&moderator=" + userid(user)) as url:
         moddata = json.loads(url.read().decode())
         games = len(moddata['data'])
         if games == 0:

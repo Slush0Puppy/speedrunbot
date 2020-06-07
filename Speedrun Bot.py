@@ -36,6 +36,13 @@ async def leaderboard(ctx, game=None, cat="", subcat=""):
     else:    #if not, send the result of the +help command
         await ctx.send(bot_prefix + srbot.srbot_help["leaderboard"])
 
+@client.command(name="ping")
+async def ping(ctx):
+    #"""Shows the Client Latency."""
+    t = await ctx.send('Pong!')
+    ms = (t.created_at-ctx.message.created_at).total_seconds() * 1000
+    await t.edit(content='Pong! \n{}ms'.format(int(ms)))
+
 @client.command(name="worldrecord", aliases=["wr"])
 async def worldrecord(ctx, game=None, cat="", subcat=""):
     if game:
@@ -89,7 +96,7 @@ async def categories(ctx, game=None):
 @client.command(name="commands", aliases=["coms"])
 async def srbot_commands(ctx):
     await ctx.send("Commands:\n"+"+leaderboard, +worldrecord, +wrcount, +modcount, +runcount, +categories, "+
-                   "+source, +invite, +help\n"+
+                   "+source, +invite, +ping, +help\n"+
         "Do +help [command] for more info.")
 
 @client.command(name="invite", aliases=["add"]) # !!! Change this if you are hosting the bot yourself.
