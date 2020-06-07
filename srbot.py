@@ -198,10 +198,20 @@ def wrcount(user,platform=""):
                     if each['run']['level']:    # checks if level or full game
                         levelwrs+=1
                     else:
-                        fullgamewrs+=1
+                        fullgamewrs+=1                    
+    
+    if fullgamewrs == 1:
+        fullgamemsg = ' full game record and '
+    else:
+        fullgamemsg = ' full game records and '
+    if levelwrs == 1:
+        levelmsg = ' IL record.'
+    else:
+        levelmsg = ' IL records.' # Grammar pls
+    
     return (username(userid(user)) + ' has ' + str(levelwrs+fullgamewrs) +
             " world records"+bool(platform)*(" on "+platform)+":\n"+#username userid
-            str(fullgamewrs) + ' full game records and ' + str(levelwrs) + ' IL records.\n')#   fixes capitalisation
+            str(fullgamewrs) + fullgamemsg + str(levelwrs) + levelmsg + '\n')#   fixes capitalisation
 
 
 #   +modcount
