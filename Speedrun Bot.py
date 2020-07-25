@@ -10,7 +10,7 @@ import srbot      #imports command functions
 description = "A bot connected to the speedrun.com api."
 bot_prefix = "+"
 
-client = commands.Bot(description = description, command_prefix = bot_prefix)
+client = commands.Bot(description = description, command_prefix = bot_prefix, allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False))
 
 client.remove_command("help")
 
@@ -38,10 +38,7 @@ async def leaderboard(ctx, game=None, cat="", subcat=""):
 
 @client.command(name="ping")
 async def ping(ctx):
-    #"""Shows the Client Latency."""
-    t = await ctx.send('Pong!')
-    ms = (t.created_at-ctx.message.created_at).total_seconds() * 1000
-    await t.edit(content='Pong! \n{}ms'.format(int(ms)))
+    await ctx.send(f'Pong! {round(client.latency*1000)}ms')
 
 @client.command(name="worldrecord", aliases=["wr"])
 async def worldrecord(ctx, game=None, cat="", subcat=""):
@@ -99,10 +96,10 @@ async def srbot_commands(ctx):
                    "+source, +invite, +ping, +help\n"+
         "Do +help [command] for more info.")
 
-@client.command(name="invite", aliases=["add"]) # !!! Change this if you are hosting the bot yourself.
+@client.command(name="invite", aliases=["add"])
 async def invite(ctx):
-    await ctx.send("To add speedrun.bot to your server, click here:\n"+
-                   "https://discordapp.com/oauth2/authorize?client_id=644879546650198016&scope=bot")
+    await ctx.send("To add speedrun.bot to your server, click here:\n<"+
+                  discord.utils.oauth_url(client.user.id, permissions=None, guild=None, redirect_uri=None)+">")
 
 @client.command(name="source", aliases=["credit","credits","code","sourcecode"])
 async def source(ctx):
