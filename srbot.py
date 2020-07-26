@@ -1,4 +1,7 @@
 from utility import *
+import aiohttp
+
+session = aiohttp.ClientSession()
 
 srbot_help = {
     "":
@@ -40,11 +43,11 @@ srbot_help = {
     }
 #   +cats
 #   Creates a dictionary with information about a game's categories. key: id, value: name
-def cats(game):
+async def cats(game):
     categories={}
-    with urllib.request.urlopen("https://www.speedrun.com/api/v1/games/" + game +
+    async with session.get("https://www.speedrun.com/api/v1/games/" + game +
                                 "/categories") as url:
-        catdata = json.loads(url.read().decode())
+        catdata = json.loads(await url.text())
         for each in catdata['data']:
             if each['type'] == "per-game":
                 categories[each['id']] = each['name']
@@ -53,14 +56,14 @@ def cats(game):
 
 #   (Not actually a command but used often by other commands)
 #   Creates a dictionary with information about a category's subcategories. key: name, value: id
-def subcats(game,category):
-    catsdict=cats(game)
+async def subcats(game,category):
+    catsdict=await cats(game)
     for each in catsdict:
         if pformat(catsdict[each].lower())==category.lower():###################################
             category = each
     variables={}
-    with urllib.request.urlopen("https://www.speedrun.com/api/v1/games/" + game + "/variables") as url:
-        vardata = json.loads(url.read().decode())
+    async with session.get("https://www.speedrun.com/api/v1/games/" + game + "/variables") as url:
+        vardata = json.loads(await url.text())
         for each in vardata['data']:
             if (each['scope']['type']=="full-game" and each['is-subcategory'] and each['category'] and
                 each['category'].lower()==category.lower()):   #finds full-game subcategories
@@ -71,12 +74,12 @@ def subcats(game,category):
 
 #   +leaderboard
 #   Displays the top 10 runs of a category
-def leaderboard(game, category="", subcategory=""):
+async def leaderboard(game, category="", subcategory=""):
     if category == "":
-        category = pformat(list(cats(game))[0])
+        category = pformat(list(await cats(game))[0])
     output = "```"
     varUrl = "" #This is put at the end of the url to filter for runs with a certain subcategory
-    subcategories = subcats(game,category)
+    subcategories = await subcats(game,category)
     for each in subcategories:
         if subcategory.lower() == each.lower():
             subcategory = each
@@ -85,9 +88,9 @@ def leaderboard(game, category="", subcategory=""):
         subcatid = subcategories[subcategory]
         varUrl = "&var-"+subcatid[0]+"="+subcatid[1]
 
-    with urllib.request.urlopen("https://www.speedrun.com/api/v1/leaderboards/"+game+"/category/"+category+
+    async with session.get("https://www.speedrun.com/api/v1/leaderboards/"+game+"/category/"+category+
                                 "?top=10"+varUrl) as url:
-        leaderboarddata = json.loads(url.read().decode())   #gets information from speedrun.com api
+        leaderboarddata = json.loads(await url.text())   #gets information from speedrun.com api
         runs = leaderboarddata['data']['runs']              #gets all top 10 runs
 
         if not runs:    #if the list of runs is empty:
@@ -110,13 +113,13 @@ def leaderboard(game, category="", subcategory=""):
 
 #   +worldrecord
 #   Displays information about the world record of a category
-def worldrecord(game,category="",subcategory=""):
+async def worldrecord(game,category="",subcategory=""):
     if category == "":
-        category = pformat(list(cats(game))[0])
+        category = pformat(list(await cats(game))[0])
     wr = {'game':'','category':'','subcategory':'','time':'','runner':'','video':'','date':'','desc':''}
     
     varUrl = "" #This is put at the end of the url to filter for runs with a certain subcategory
-    subcategories = subcats(game,category)
+    subcategories = await subcats(game,category)
     for each in subcategories:
         if subcategory.lower() == each.lower():
             subcategory = each
@@ -125,19 +128,20 @@ def worldrecord(game,category="",subcategory=""):
         subcatid = subcategories[subcategory]
         varUrl = "&var-"+subcatid[0]+"="+subcatid[1]
 
-    with urllib.request.urlopen("https://www.speedrun.com/api/v1/leaderboards/"+game+"/category/"+category+
+    async with session.get("https://www.speedrun.com/api/v1/leaderboards/"+game+"/category/"+category+
                                 "?top=1"+varUrl) as url:
-        rundata = json.loads(url.read().decode())
+        rundata = json.loads(await url.text())
         
         if not rundata['data']['runs']: #if there is no data for runs:
             return "There are no submitted runs in this category."
         
         run = rundata['data']['runs'][0]
         
-        with urllib.request.urlopen("https://www.speedrun.com/api/v1/games/"+game) as gameurl:
-            wr['game'] = json.loads(gameurl.read().decode())['data']['names']['international']
+        async with session.get("https://www.speedrun.com/api/v1/games/"+game) as gameurl:
+            wr['game'] = json.loads(await gameurl.text())['data']['names']['international']
 
-        wr['category'] = cats(game)[rundata['data']['category']]
+        categories = await cats(game)
+        wr['category'] = categories[rundata['data']['category']]
         wr['time'] = realtime(run['run']['times']['primary_t'])
         try:
             wr['video'] = run['run']['videos']['links'][0]['uri']
@@ -165,14 +169,14 @@ def worldrecord(game,category="",subcategory=""):
 
 #   +wrcount
 #   Counts the number of world records a user has (on a given platform if specified)
-def wrcount(user,platform=""):
+async def wrcount(user,platform=""):
     for each in platforms:      #fixes case
         if each.lower()==platform.lower():
             platform = each
     fullgamewrs = 0
     levelwrs = 0
-    with urllib.request.urlopen("https://www.speedrun.com/api/v1/users/" + user + "/personal-bests") as url:
-        pbdata = json.loads(url.read().decode())
+    async with session.get("https://www.speedrun.com/api/v1/users/" + user + "/personal-bests") as url:
+        pbdata = json.loads(await url.text())
 
         if platform:
             if platform in platforms:
@@ -216,14 +220,14 @@ def wrcount(user,platform=""):
 
 #   +modcount
 #   Counts the number of games and series a user moderates. 
-def modcount(user):
-    with urllib.request.urlopen("https://www.speedrun.com/api/v1/games?max=200&moderator=" + userid(user)) as url:
-        moddata = json.loads(url.read().decode())
+async def modcount(user):
+    async with session.get("https://www.speedrun.com/api/v1/games?max=200&moderator=" + userid(user)) as url:
+        moddata = json.loads(await url.text())
         games = len(moddata['data'])
         if games == 0:
             games = 'no'
-    with urllib.request.urlopen("https://www.speedrun.com/api/v1/series?moderator=" + userid(user)) as url:
-        moddata = json.loads(url.read().decode())
+    async with session.get("https://www.speedrun.com/api/v1/series?moderator=" + userid(user)) as url:
+        moddata = json.loads(await url.text())
         series = len(moddata['data'])
         if series == 0:
             series = 'no'
@@ -233,7 +237,7 @@ def modcount(user):
 
 #   +runcount
 #   Counts the number of runs a user has submitted.
-def runcount(user,platform="",obsolete="yes"):
+async def runcount(user,platform="",obsolete="yes"):
     for each in platforms:      #fixes case
         if each.lower()==platform.lower():
             platform = each
@@ -243,17 +247,17 @@ def runcount(user,platform="",obsolete="yes"):
     runs = 0
     fullruns = 0
     if obsolete.lower()=="no" or obsolete.lower()=="-":
-        with urllib.request.urlopen("https://www.speedrun.com/api/v1/users/" + user + "/personal-bests") as url:
-            data = json.loads(url.read().decode())
+        async with session.get("https://www.speedrun.com/api/v1/users/" + user + "/personal-bests") as url:
+            data = json.loads(await url.text())
             for each in data['data']:
                 rundata.append(each['run'])
     else:
         offset=0
         repeat=True
         while repeat:
-            with urllib.request.urlopen("https://www.speedrun.com/api/v1/runs?user=" + userid(user) +
+            async with session.get("https://www.speedrun.com/api/v1/runs?user=" + userid(user) +
                                         "&max=200&offset="+str(offset)) as url:
-                data = json.loads(url.read().decode())
+                data = json.loads(await url.text())
                 rundata += data['data']
                 offset+=200
                 try:

@@ -1,4 +1,5 @@
 from discord.ext import commands
+import discord
 
 from utility import pformat, makelist       #pformat used to format user inputs
 import srbot      #imports command functions
@@ -12,11 +13,12 @@ class Src(commands.Cog):
     async def on_command_error(self, ctx,error):
         if not isinstance(error, commands.CommandNotFound):
             await ctx.send("Something went wrong! Make sure everything is formatted and spelled correctly.")
+            print(error)
 
     @commands.command(name="leaderboard", aliases=["lb"], description="test")
     async def leaderboard(self, ctx, game=None, cat="", subcat=""):
         if game: #checks if a game has been entered
-            await ctx.send(srbot.leaderboard(pformat(game), pformat(cat), subcat))
+            await ctx.send(await srbot.leaderboard(pformat(game), pformat(cat), subcat))
         else:    #if not, send the result of the +help command
             await ctx.send(ctx.prefix + srbot.srbot_help["leaderboard"])
 
@@ -27,7 +29,7 @@ class Src(commands.Cog):
     @commands.command(name="worldrecord", aliases=["wr"])
     async def worldrecord(self, ctx, game=None, cat="", subcat=""):
         if game:
-            await ctx.send(srbot.worldrecord(pformat(game), pformat(cat), subcat))
+            await ctx.send(await srbot.worldrecord(pformat(game), pformat(cat), subcat))
         else:
             await ctx.send(ctx.prefix + srbot.srbot_help["worldrecord"])
 
@@ -37,9 +39,9 @@ class Src(commands.Cog):
             if (user[0]+user[-1]) == "[]":
                 for each in user[1:-1].split(','):
                     print(each)
-                    await ctx.author.send(srbot.wrcount(pformat(each), platform))
+                    await ctx.author.send(await srbot.wrcount(pformat(each), platform))
             else:
-                await ctx.send(srbot.wrcount(user, platform))
+                await ctx.send(await srbot.wrcount(user, platform))
         else:
             await ctx.send(ctx.prefix + srbot.srbot_help["wrcount"])
 
@@ -49,9 +51,9 @@ class Src(commands.Cog):
             if (user[0]+user[-1]) == "[]":
                 for each in user[1:-1].split(','):
                     print(each)
-                    await ctx.author.send(srbot.modcount(pformat(each)))
+                    await ctx.author.send(await srbot.modcount(pformat(each)))
             else:
-                await ctx.send(srbot.modcount(user))
+                await ctx.send(await srbot.modcount(user))
         else:
             await ctx.send(ctx.prefix + srbot.srbot_help["modcount"])
 
@@ -61,16 +63,17 @@ class Src(commands.Cog):
             if (user[0]+user[-1]) == "[]":
                 for each in user[1:-1].split(','):
                     print(each)
-                    await ctx.author.send(srbot.runcount(pformat(each), platform))
+                    await ctx.author.send(await srbot.runcount(pformat(each), platform))
             else:
-                await ctx.send(srbot.runcount(user, platform))
+                await ctx.send(await srbot.runcount(user, platform))
         else:
             await ctx.send(ctx.prefix + srbot.srbot_help["runcount"])
 
     @commands.command(name="categories", aliases=["cats"])
     async def categories(self, ctx, game=None):
         if game:
-            await ctx.send(makelist(list(srbot.cats(pformat(game)).values())))
+            categories = await srbot.cats(pformat(game))
+            await ctx.send(makelist(list(categories.values())))
         else:
             await ctx.send(ctx.prefix + srbot.srbot_help["categories"])
 
