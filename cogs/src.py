@@ -69,6 +69,18 @@ class Src(commands.Cog):
         else:
             await ctx.send(ctx.prefix + srbot.srbot_help["runcount"])
 
+    @commands.command(name="gamesplayed", aliases=["gp"])
+    async def gamesplayed(self, ctx, user=None,):
+        if user:
+            if (user[0]+user[-1]) == "[]":
+                for each in user[1:-1].split(','):
+                    print(each)
+                    await ctx.author.send(await srbot.gamecount(pformat(each)))
+            else:
+                await ctx.send(await srbot.gamecount(user))
+        else:
+            await ctx.send(ctx.prefix + srbot.srbot_help["runcount"])
+
     @commands.command(name="categories", aliases=["cats"])
     async def categories(self, ctx, game=None):
         if game:

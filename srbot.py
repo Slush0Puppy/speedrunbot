@@ -285,3 +285,15 @@ async def runcount(user,platform="",obsolete="yes"):
 
     return (username(userid(user))+" has "+str(runs)+" runs"+bool(platform)*(" on "+platform)+":\n"+
             str(fullruns)+" full game runs and "+str(runs-fullruns)+" IL runs.\n")
+
+async def gamecount(user):
+    async with session.get("https://www.speedrun.com/api/v1/users/" + user + "/personal-bests") as url:
+            data = json.loads(await url.text())
+            games = []
+            gamesplayed = 0
+            for pb in data['data']:
+                if not pb['run']['game'] in games:
+                    gamesplayed += 1
+                    games.append(pb['run']['game'])
+
+    return (username(userid(user))+" has played "+str(gamesplayed)+" games")
