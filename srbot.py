@@ -1,7 +1,7 @@
 from utility import *
-import aiohttp
+from aiohttp import ClientSession
 
-session = aiohttp.ClientSession()
+session = ClientSession()
 
 srbot_help = {
     "":
@@ -25,6 +25,9 @@ srbot_help = {
     "runcount":
         "**runcount user [platform = all] [obsolete = true]**\n"+
         "Counts the number of runs by a user. By default, obsoleted runs are also counted.",
+    "gamesplayed":
+        "**gamesplayed user**\n"+
+        "Counts the number of games a user has a run accepted in.",
     "categories":
         "**categories game**\n"+
         "Shows all categories of a game.",
