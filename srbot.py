@@ -47,7 +47,7 @@ async def subcats(game, category):
     for each in catsdict:
         if (
             pformat(catsdict[each].lower()) == category.lower()
-        ):  ###################################
+        ):  
             category = each
     variables = {}
     async with session.get(
