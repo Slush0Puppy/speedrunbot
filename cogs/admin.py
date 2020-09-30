@@ -9,53 +9,65 @@ class Admin(commands.Cog):
         self.bot = bot
 
     @commands.is_owner()
-    @commands.command(name='reload', usage='<extension>')
+    @commands.command(name="reload", usage="<extension>")
     async def _reload(self, ctx, ext):
         """Reloads an extension"""
         try:
-            self.bot.reload_extension(f'cogs.{ext}')
-            await ctx.send(f'The extension {ext} was reloaded!')
+            self.bot.reload_extension(f"cogs.{ext}")
+            await ctx.send(f"The extension {ext} was reloaded!")
         except commands.ExtensionNotFound:
-            await ctx.send(f'The extension {ext} doesn\'t exist.')
+            await ctx.send(f"The extension {ext} doesn't exist.")
         except commands.ExtensionNotLoaded:
-            await ctx.send(f'The extension {ext} is not loaded! (use {ctx.prefix}load)')
+            await ctx.send(f"The extension {ext} is not loaded! (use {ctx.prefix}load)")
         except commands.NoEntryPointError:
-            await ctx.send(f'The extension {ext} doesn\'t have an entry point (try adding the setup function) ')
+            await ctx.send(
+                f"The extension {ext} doesn't have an entry point (try adding the setup function) "
+            )
         except commands.ExtensionFailed:
-            await ctx.send(f'Some unknown error happened while trying to reload extension {ext} (check logs)')
-            self.bot.logger.exception(f'Failed to reload extension {ext}:')
+            await ctx.send(
+                f"Some unknown error happened while trying to reload extension {ext} (check logs)"
+            )
+            self.bot.logger.exception(f"Failed to reload extension {ext}:")
 
     @commands.is_owner()
-    @commands.command(name='load', usage='<extension>')
+    @commands.command(name="load", usage="<extension>")
     async def _load(self, ctx, ext):
         """Loads an extension"""
         try:
-            self.bot.load_extension(f'cogs.{ext}')
-            await ctx.send(f'The extension {ext} was loaded!')
+            self.bot.load_extension(f"cogs.{ext}")
+            await ctx.send(f"The extension {ext} was loaded!")
         except commands.ExtensionNotFound:
-            await ctx.send(f'The extension {ext} doesn\'t exist!')
+            await ctx.send(f"The extension {ext} doesn't exist!")
         except commands.ExtensionAlreadyLoaded:
-            await ctx.send(f'The extension {ext} is already loaded.')
+            await ctx.send(f"The extension {ext} is already loaded.")
         except commands.NoEntryPointError:
-            await ctx.send(f'The extension {ext} doesn\'t have an entry point (try adding the setup function)')
+            await ctx.send(
+                f"The extension {ext} doesn't have an entry point (try adding the setup function)"
+            )
         except commands.ExtensionFailed:
-            await ctx.send(f'Some unknown error happened while trying to reload extension {ext} (check logs)')
-            self.bot.logger.exception(f'Failed to reload extension {ext}:')
+            await ctx.send(
+                f"Some unknown error happened while trying to reload extension {ext} (check logs)"
+            )
+            self.bot.logger.exception(f"Failed to reload extension {ext}:")
 
     @commands.is_owner()
-    @commands.command(name='unload', usage='<extension>')
+    @commands.command(name="unload", usage="<extension>")
     async def _unload(self, ctx, ext):
         """Loads an extension"""
         try:
-            self.bot.unload_extension(f'cogs.{ext}')
-            await ctx.send(f'The extension {ext} was unloaded!')
+            self.bot.unload_extension(f"cogs.{ext}")
+            await ctx.send(f"The extension {ext} was unloaded!")
         except commands.ExtensionNotFound:
-            await ctx.send(f'The extension {ext} doesn\'t exist!')
+            await ctx.send(f"The extension {ext} doesn't exist!")
         except commands.NoEntryPointError:
-            await ctx.send(f'The extension {ext} doesn\'t have an entry point (try adding the setup function)')
+            await ctx.send(
+                f"The extension {ext} doesn't have an entry point (try adding the setup function)"
+            )
         except commands.ExtensionFailed:
-            await ctx.send(f'Some unknown error happened while trying to reload extension {ext} (check logs)')
-            self.bot.logger.exception(f'Failed to unload extension {ext}:')
+            await ctx.send(
+                f"Some unknown error happened while trying to reload extension {ext} (check logs)"
+            )
+            self.bot.logger.exception(f"Failed to unload extension {ext}:")
 
     @commands.is_owner()
     @commands.command(name="pull")
