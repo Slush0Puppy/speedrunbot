@@ -50,7 +50,7 @@ async def cats(game):
     categories={}
     async with session.get("https://www.speedrun.com/api/v1/games/" + game +
                                 "/categories") as url:
-        catdata = json.loads(await url.text())
+        catdata = loads(await url.text())
         for each in catdata['data']:
             if each['type'] == "per-game":
                 categories[each['id']] = each['name']
@@ -66,7 +66,7 @@ async def subcats(game,category):
             category = each
     variables={}
     async with session.get("https://www.speedrun.com/api/v1/games/" + game + "/variables") as url:
-        vardata = json.loads(await url.text())
+        vardata = loads(await url.text())
         for each in vardata['data']:
             if (each['scope']['type']=="full-game" and each['is-subcategory'] and each['category'] and
                 each['category'].lower()==category.lower()):   #finds full-game subcategories
@@ -93,7 +93,7 @@ async def leaderboard(game, category="", subcategory=""):
 
     async with session.get("https://www.speedrun.com/api/v1/leaderboards/"+game+"/category/"+category+
                                 "?top=10"+varUrl) as url:
-        leaderboarddata = json.loads(await url.text())   #gets information from speedrun.com api
+        leaderboarddata = loads(await url.text())   #gets information from speedrun.com api
         runs = leaderboarddata['data']['runs']              #gets all top 10 runs
 
         if not runs:    #if the list of runs is empty:
@@ -133,7 +133,7 @@ async def worldrecord(game,category="",subcategory=""):
 
     async with session.get("https://www.speedrun.com/api/v1/leaderboards/"+game+"/category/"+category+
                                 "?top=1"+varUrl) as url:
-        rundata = json.loads(await url.text())
+        rundata = loads(await url.text())
         
         if not rundata['data']['runs']: #if there is no data for runs:
             return "There are no submitted runs in this category."
@@ -141,7 +141,7 @@ async def worldrecord(game,category="",subcategory=""):
         run = rundata['data']['runs'][0]
         
         async with session.get("https://www.speedrun.com/api/v1/games/"+game) as gameurl:
-            wr['game'] = json.loads(await gameurl.text())['data']['names']['international']
+            wr['game'] = loads(await gameurl.text())['data']['names']['international']
 
         categories = await cats(game)
         wr['category'] = categories[rundata['data']['category']]
@@ -179,7 +179,7 @@ async def wrcount(user,platform=""):
     fullgamewrs = 0
     levelwrs = 0
     async with session.get("https://www.speedrun.com/api/v1/users/" + user + "/personal-bests") as url:
-        pbdata = json.loads(await url.text())
+        pbdata = loads(await url.text())
 
         if platform:
             if platform in platforms:
@@ -225,12 +225,12 @@ async def wrcount(user,platform=""):
 #   Counts the number of games and series a user moderates. 
 async def modcount(user):
     async with session.get("https://www.speedrun.com/api/v1/games?max=200&moderator=" + userid(user)) as url:
-        moddata = json.loads(await url.text())
+        moddata = loads(await url.text())
         games = len(moddata['data'])
         if games == 0:
             games = 'no'
     async with session.get("https://www.speedrun.com/api/v1/series?moderator=" + userid(user)) as url:
-        moddata = json.loads(await url.text())
+        moddata = loads(await url.text())
         series = len(moddata['data'])
         if series == 0:
             series = 'no'
@@ -251,7 +251,7 @@ async def runcount(user,platform="",obsolete="yes"):
     fullruns = 0
     if obsolete.lower()=="no" or obsolete.lower()=="-":
         async with session.get("https://www.speedrun.com/api/v1/users/" + user + "/personal-bests") as url:
-            data = json.loads(await url.text())
+            data = loads(await url.text())
             for each in data['data']:
                 rundata.append(each['run'])
     else:
@@ -260,7 +260,7 @@ async def runcount(user,platform="",obsolete="yes"):
         while repeat:
             async with session.get("https://www.speedrun.com/api/v1/runs?user=" + userid(user) +
                                         "&max=200&offset="+str(offset)) as url:
-                data = json.loads(await url.text())
+                data = loads(await url.text())
                 rundata += data['data']
                 offset+=200
                 try:
@@ -291,7 +291,7 @@ async def runcount(user,platform="",obsolete="yes"):
 
 async def gamecount(user):
     async with session.get("https://www.speedrun.com/api/v1/users/" + user + "/personal-bests") as url:
-            data = json.loads(await url.text())
+            data = loads(await url.text())
             games = []
             gamesplayed = 0
             for pb in data['data']:

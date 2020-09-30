@@ -1,6 +1,6 @@
-import os
+from git.cmd import Git
+from git.exc import GitCommandError
 
-import git
 from discord.ext import commands
 
 
@@ -61,7 +61,7 @@ class Admin(commands.Cog):
     @commands.command(name="pull")
     async def pull(self, ctx):
         """Update the bot from github"""
-        g = git.cmd.Git(os.getcwd())
+        g = Git()
         try:
             await ctx.send(f"Probably pulled.\n```\n{g.pull()}```")
         except git.exc.GitCommandError as e:

@@ -1,18 +1,19 @@
-import math
-import urllib.request, json 
+from math import floor
+from urllib.request import urlopen
+from ujson import loads
 
 #   An array of every month. Used to convert numbers to month names.
 month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
 
 #   Converts 1 to "1st", 2 to "2nd", etc.
-ordinal = lambda n: "%d%s" % (n,"tsnrhtdd"[(math.floor(n/10)%10!=1)*(n%10<4)*n%10::4])
+ordinal = lambda n: "%d%s" % (n,"tsnrhtdd"[(floor(n/10)%10!=1)*(n%10<4)*n%10::4])
 
 
 #   platforms is a dictionary where the keys are the names of each platform, and the values are the respective ids.
 platforms = {}
-with urllib.request.urlopen("https://www.speedrun.com/api/v1/platforms?max=10000") as platurl:
-    platdata = json.loads(platurl.read().decode())
+with urlopen("https://www.speedrun.com/api/v1/platforms?max=10000") as platurl:
+    platdata = loads(platurl.read().decode())
     for each in platdata['data']:
         platforms[each['name']]=each['id']
 
@@ -54,13 +55,13 @@ def makelist(arr): # turns array into syndetic list
 
 #   username() gets userid from a username; userid() does the inverse
 def username(userid):
-    with urllib.request.urlopen("https://www.speedrun.com/api/v1/users/" + userid) as url:
-        userdata = json.loads(url.read().decode())          #gets information from speedrun.com api
+    with urlopen("https://www.speedrun.com/api/v1/users/" + userid) as url:
+        userdata = loads(url.read().decode())          #gets information from speedrun.com api
         return userdata['data']['names']['international']   #reads the international name from api
 
 def userid(username):
-    with urllib.request.urlopen("https://www.speedrun.com/api/v1/users/" + username) as url:
-        userdata = json.loads(url.read().decode())
+    with urlopen("https://www.speedrun.com/api/v1/users/" + username) as url:
+        userdata = loads(url.read().decode())
         return userdata['data']['id']
 
 

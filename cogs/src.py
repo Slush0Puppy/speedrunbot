@@ -1,5 +1,5 @@
 from discord.ext import commands
-import discord
+from discord.utils import oauth_url
 
 from utility import pformat, makelist       #pformat used to format user inputs
 import srbot      #imports command functions
@@ -98,7 +98,7 @@ class Src(commands.Cog):
     @commands.command(name="invite", aliases=["add"])
     async def invite(self, ctx):
         await ctx.send("To add speedrun.bot to your server, click here:\n<"+
-                      discord.utils.oauth_url(self.bot.user.id, permissions=None, guild=None, redirect_uri=None)+">")
+                      oauth_url(self.bot.user.id)+">")
 
     @commands.command(name="source", aliases=["credit","credits","code","sourcecode"])
     async def source(self, ctx):
