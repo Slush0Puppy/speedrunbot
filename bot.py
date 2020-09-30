@@ -16,7 +16,11 @@ class SpeedrunBot(commands.Bot):
         self.bot_prefix = "+"
         super().__init__(description = self.description, 
             command_prefix = self.bot_prefix, 
-            allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False))
+            allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False),
+            intents=discord.Intents(
+                messages=True
+                )
+            )
 
         self.remove_command("help")
 
