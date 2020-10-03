@@ -2,10 +2,7 @@ import discord
 
 from discord.ext import commands
 
-initial_extensions = (
-    "cogs.src",
-    "cogs.admin"
-)
+initial_extensions = ("cogs.src", "cogs.admin")
 
 
 class SpeedrunBot(commands.Bot):
@@ -14,9 +11,14 @@ class SpeedrunBot(commands.Bot):
     def __init__(self):
         self.description = "A bot connected to the speedrun.com api."
         self.bot_prefix = "+"
-        super().__init__(description = self.description, 
-            command_prefix = self.bot_prefix, 
-            allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False))
+        super().__init__(
+            description=self.description,
+            command_prefix=self.bot_prefix,
+            allowed_mentions=discord.AllowedMentions(
+                everyone=False, users=True, roles=False
+            ),
+            intents=discord.Intents(messages=True),
+        )
 
         self.remove_command("help")
 
@@ -38,9 +40,17 @@ class SpeedrunBot(commands.Bot):
         await self.process_commands(message)
 
     async def on_ready(self):
-        await self.change_presence(activity=discord.Game(name='Speedruns | +help'))
-        print("Ready\n" + "\nName:\t\t " + self.user.name + "\nID:\t\t " + str(self.user.id) +
-              "\nDiscord Version: " + discord.__version__ + "\n")
+        await self.change_presence(activity=discord.Game(name="Speedruns | +help"))
+        print(
+            "Ready\n"
+            + "\nName:\t\t "
+            + self.user.name
+            + "\nID:\t\t "
+            + str(self.user.id)
+            + "\nDiscord Version: "
+            + discord.__version__
+            + "\n"
+        )
 
 
 # the following if statement ensures that bot.py is the actual file being executed
@@ -48,7 +58,7 @@ class SpeedrunBot(commands.Bot):
 if __name__ == "__main__":
     print("Starting up...")
     try:
-        with open('token.txt') as f:
+        with open("token.txt") as f:
             token = f.read()
         bot = SpeedrunBot()
         bot.run(token)
