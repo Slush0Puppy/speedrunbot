@@ -20,6 +20,8 @@ srbot_help = {
     + "Counts the number of runs by a user. By default, obsoleted runs are also counted.",
     "gamesplayed": "**gamesplayed user**\n"
     + "Counts the number of games a user has a run accepted in.",
+    "categoriescount": "**categoriescount user**\n"
+    + "Counts the number of categories a user has a run accepted in.",
     "categories": "**categories game**\n" + "Shows all categories of a game.",
     "source": "**source**\n" + "Provides a link to the bot's source code and homepage.",
     "invite": "**invite**\n" + "Shows the bot's invite link.",
@@ -45,9 +47,7 @@ async def cats(game):
 async def subcats(game, category):
     catsdict = await cats(game)
     for each in catsdict:
-        if (
-            pformat(catsdict[each].lower()) == category.lower()
-        ):  
+        if pformat(catsdict[each].lower()) == category.lower():
             category = each
     variables = {}
     async with session.get(
@@ -391,3 +391,20 @@ async def gamecount(user):
                 games.append(pb["run"]["game"])
 
     return username(userid(user)) + " has played " + str(gamesplayed) + " games"
+
+
+async def categoriescount(user):
+    async with session.get(
+        "https://www.speedrun.com/api/v1/users/" + user + "/personal-bests"
+    ) as url:
+        data = loads(await url.text())
+        categories = []
+        categoriesplayed = 0
+        for pb in data["data"]:
+            if not pb["run"]["category"] in categories:
+                categoriesplayed += 1
+                categories.append(pb["run"]["category"])
+
+    return (
+        username(userid(user)) + " has played " + str(categoriesplayed) + " categories"
+    )
